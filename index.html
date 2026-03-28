@@ -110,6 +110,50 @@
         .btn-equals:hover {
             background: #12b866;
         }
+
+        .history {
+            margin-top: 20px;
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .history-title {
+            color: #8a8a9a;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-clear {
+            background: none;
+            border: none;
+            color: #e94560;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        .history-item {
+            color: #c0c0d0;
+            font-size: 14px;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1a40;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-empty {
+            color: #555;
+            font-size: 13px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -142,6 +186,14 @@
             <button class="btn-number" onclick="addNumber('0')">0</button>
             <button class="btn-number" onclick="addDot()">.</button>
             <button class="btn-equals" onclick="calculate()">=</button>
+        </div>
+        <div class="history" id="history">
+            <div class="history-title">
+                <span>계산 기록</span>
+                <button class="history-clear" onclick="clearHistory()">지우기</button>
+            </div>
+            <div class="history-empty" id="historyEmpty">기록이 없습니다</div>
+            <div id="historyList"></div>
         </div>
     </div>
 
@@ -213,6 +265,7 @@
                     current = String(result);
                 }
 
+                addHistory(fullExpression + ' = ' + current);
                 expression = fullExpression + ' =';
                 hasResult = true;
                 updateDisplay();
@@ -234,6 +287,22 @@
             if (hasResult) return;
             current = current.length > 1 ? current.slice(0, -1) : '0';
             updateDisplay();
+        }
+
+        const historyList = document.getElementById('historyList');
+        const historyEmpty = document.getElementById('historyEmpty');
+
+        function addHistory(text) {
+            historyEmpty.style.display = 'none';
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.textContent = text;
+            historyList.prepend(item);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = '';
+            historyEmpty.style.display = 'block';
         }
 
         document.addEventListener('keydown', (e) => {
